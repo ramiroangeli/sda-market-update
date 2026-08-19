@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>{{ report_title }}</title>
+<style>{{ tokens_css }}</style>
+<style>{{ editorial_css }}</style>
+<style>
+  /* Update-specific overrides — kept separate from the 76pp editorial-archetypes.css */
+  body { margin: 0; }
+  .page-market-snapshot .snapshot__stats { align-content: flex-start; }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════════════
+     PAGE 1 — COVER
+     ══════════════════════════════════════════════════════════════ -->
+<section class="ea-page ea-dark page-cover-editorial">
+  <span class="cover__edition-label">SDA HOME CHOICES &middot; MARKET UPDATE</span>
+  {% if logo_uri %}<img class="cover__logo" src="{{ logo_uri }}" alt="SDA Home Choices">{% endif %}
+  <h1 class="cover__title">{{ cover_title }}</h1>
+  <p class="cover__year">{{ quarter_label }}</p>
+  <p class="cover__tagline">{{ cover_tagline }}</p>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     PAGE 2 — MARKET SNAPSHOT (headline KPIs from the new release)
+     ══════════════════════════════════════════════════════════════ -->
+<section class="ea-page ea-dark page-market-snapshot">
+  <div class="snapshot__context">
+    <span class="snapshot__label">Quarterly Snapshot</span>
+    <h2 class="snapshot__title">{{ snapshot_title }}</h2>
+    <p class="snapshot__description">{{ snapshot_description }}</p>
+  </div>
+  <div class="snapshot__stats">
+    {% for kpi in headline_kpis %}
+    <div class="{{ 'stat-primary' if loop.index <= 2 else 'stat-secondary' }}">
+      <span class="stat-hero__value" style="font-size: {{ '52pt' if loop.index <= 2 else '34pt' }};">{{ kpi.value }}</span>
+      <span class="stat-label">{{ kpi.label }}</span>
+      {% if kpi.sublabel %}<span class="stat-sublabel">{{ kpi.sublabel }}</span>{% endif %}
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     PAGE 3 — CHART HERO #1 (primary trend)
+     ══════════════════════════════════════════════════════════════ -->
+<section class="ea-page page-chart-hero">
+  <span class="chart-hero__kicker">{{ chart1_kicker }}</span>
+  <h3 class="chart-hero__title">{{ chart1_title }}</h3>
+  <p class="chart-hero__interpretive">{{ chart1_interpretive | safe }}</p>
+  <div class="chart-hero__chart">
+    <img src="{{ chart1_uri }}" alt="{{ chart1_title }}">
+  </div>
+  <p class="chart-hero__source">{{ chart1_source }}</p>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     PAGE 4 — CHART HERO #2 (secondary trend / regional or design-mix cut)
+     ══════════════════════════════════════════════════════════════ -->
+<section class="ea-page page-chart-hero">
+  <span class="chart-hero__kicker">{{ chart2_kicker }}</span>
+  <h3 class="chart-hero__title">{{ chart2_title }}</h3>
+  <p class="chart-hero__interpretive">{{ chart2_interpretive | safe }}</p>
+  <div class="chart-hero__chart">
+    <img src="{{ chart2_uri }}" alt="{{ chart2_title }}">
+  </div>
+  <p class="chart-hero__source">{{ chart2_source }}</p>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     PAGE 5 — CLOSING (context, what changed since last quarterly, contact)
+     ══════════════════════════════════════════════════════════════ -->
+<section class="ea-page ea-dark page-closing">
+  <h2 class="closing__title">{{ closing_title }}</h2>
+  <p class="closing__body">{{ closing_body | safe }}</p>
+  <div class="pull-quote-editorial" style="border-left-color: var(--ea-sky);">
+    <p class="pull-quote-editorial__text" style="color: var(--ea-on-dark);">{{ closing_quote }}</p>
+  </div>
+  <p class="source-note">{{ closing_source_note }}</p>
+  <div class="closing__contact-block">
+    <p class="closing__contact-item"><strong>{{ contact_name }}</strong></p>
+    <p class="closing__contact-item">{{ contact_email }}</p>
+    <p class="closing__contact-item">{{ contact_note }}</p>
+  </div>
+</section>
+
+</body>
+</html>

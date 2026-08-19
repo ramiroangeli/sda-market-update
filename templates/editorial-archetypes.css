@@ -1,0 +1,1389 @@
+/*
+ * editorial-archetypes.css
+ * SDA Report 2026 — Reusable editorial page and component system
+ *
+ * Design direction: Premium editorial market intelligence
+ * Benchmark: Management Rights Report 2025 (principles only — not brand)
+ *
+ * Load AFTER tokens.css. These classes override and extend token defaults.
+ *
+ * FONT DEPENDENCY:
+ *   Barlow Condensed 600 + 700 must be available.
+ *   Load via @import or local @font-face before this file.
+ */
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   DESIGN TOKENS (local fallbacks — canonical values live in tokens.css)
+   ───────────────────────────────────────────────────────────────────────────── */
+
+:root {
+  --ea-dark:          #00162B;   /* editorial dark — deep navy */
+  --ea-dark-mid:      #06336B;   /* mid dark — table headers */
+  --ea-blue:          #0476D9;   /* advisory blue — primary accent */
+  --ea-sky:           #2EA3F2;   /* sky accent — large numbers on dark */
+  --ea-ink:           #1A2A3A;   /* primary text on light */
+  --ea-body:          #3C5468;   /* body copy */
+  --ea-muted:         #6B8197;   /* captions, secondary */
+  --ea-warm:          #F6F1EC;   /* warm near-white data pages */
+  --ea-white:         #FFFFFF;   /* canvas */
+  --ea-surface:       #F7F9FC;   /* cold tint for cards */
+  --ea-border:        #E1E8EF;   /* rule colour */
+  --ea-on-dark:       #E8F0F8;   /* body text on dark pages */
+  --ea-on-dark-title: #FFFFFF;   /* headlines on dark */
+  --ea-on-dark-muted: #7A9BBD;   /* muted text on dark */
+
+  --ea-font-condensed: 'Barlow Condensed', 'Source Sans 3', 'Arial Narrow', sans-serif;
+  --ea-font-serif:     'Playfair Display', Georgia, serif;
+  --ea-font-sans:      'Source Sans 3', system-ui, sans-serif;
+
+  /* A4 portrait page dimensions */
+  --ea-page-w: 210mm;
+  --ea-page-h: 297mm;
+  --ea-margin-outer: 20mm;   /* outer margin on bleed pages */
+  --ea-margin-inner: 15mm;   /* inner margin on data pages */
+}
+
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   @PAGE RULES — suppress headers/footers on full-bleed dark pages
+   ───────────────────────────────────────────────────────────────────────────── */
+
+@page editorial-dark {
+  margin: 0;
+  @top-left    { content: none; }
+  @top-right   { content: none; }
+  @bottom-left { content: none; }
+  @bottom-right { content: none; }
+}
+
+@page data-warm {
+  margin: 15mm 18mm 15mm 18mm;
+}
+
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   PAGE BASE — shared properties for all archetype pages
+   ───────────────────────────────────────────────────────────────────────────── */
+
+.ea-page {
+  width:       var(--ea-page-w);
+  min-height:  var(--ea-page-h);
+  break-before: page;
+  break-after:  page;
+  box-sizing:   border-box;
+  overflow:     hidden;
+  position:     relative;
+}
+
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   DARK EDITORIAL BASE — shared by all full-bleed dark pages
+   ───────────────────────────────────────────────────────────────────────────── */
+
+.ea-dark {
+  background:  var(--ea-dark);
+  color:       var(--ea-on-dark);
+  min-height:  297mm;
+  height:      297mm;
+}
+
+.ea-dark h1, .ea-dark h2, .ea-dark h3 {
+  color: var(--ea-on-dark-title);
+}
+
+.ea-dark p, .ea-dark li {
+  color: var(--ea-on-dark);
+}
+
+.ea-dark .ea-muted-text {
+  color: var(--ea-on-dark-muted);
+}
+
+/* Top rule accent — pseudo-element on dark pages */
+.ea-dark::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  background: var(--ea-blue);
+  display: block;
+}
+
+/* Fallback: <div class="ea-accent-rule"> for WeasyPrint if ::before fails */
+.ea-accent-rule {
+  position:   absolute;
+  top:        0; left: 0; right: 0;
+  height:     4px;
+  background: var(--ea-blue);
+  display:    block;
+}
+
+/* Bottom brand label */
+.ea-dark-edition-label {
+  position:      absolute;
+  bottom:        12mm;
+  left:          var(--ea-margin-outer);
+  font-family:   var(--ea-font-sans);
+  font-size:     7.5pt;
+  font-weight:   600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color:         var(--ea-on-dark-muted);
+}
+
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   ARCHETYPE 1 — COVER (.page-cover-editorial)
+   ───────────────────────────────────────────────────────────────────────────── */
+
+.page-cover-editorial {
+  page:        editorial-dark;
+  display:     flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding:     0 var(--ea-margin-outer) 20mm var(--ea-margin-outer);
+}
+
+.cover__edition-label {
+  position:    absolute;
+  top:         14mm;
+  left:        var(--ea-margin-outer);
+  font-family: var(--ea-font-sans);
+  font-size:   7.5pt;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color:       var(--ea-on-dark-muted);
+}
+
+.cover__logo {
+  position:    absolute;
+  top:         12mm;
+  right:       var(--ea-margin-outer);
+  width:       40mm;
+}
+
+.cover__title {
+  font-family:    var(--ea-font-condensed);
+  font-size:      148pt;
+  font-weight:    800;
+  line-height:    0.86;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  color:          var(--ea-on-dark-title);
+  margin:         0 0 4mm 0;
+}
+
+.cover__title em {
+  font-style: normal;
+  color:      var(--ea-sky);
+}
+
+.cover__year {
+  font-family:    var(--ea-font-condensed);
+  font-size:      80pt;
+  font-weight:    700;
+  line-height:    0.9;
+  letter-spacing: -0.02em;
+  color:          var(--ea-blue);
+  margin:         0 0 6mm 0;
+}
+
+.cover__tagline {
+  font-family:  var(--ea-font-sans);
+  font-size:    9.5pt;
+  font-weight:  400;
+  line-height:  1.5;
+  color:        var(--ea-on-dark);
+  max-width:    100mm;
+}
+
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   ARCHETYPE 2 — BRAND PATTERN DIVIDER (.page-pattern-divider)
+   ───────────────────────────────────────────────────────────────────────────── */
+
+.page-pattern-divider {
+  page:        editorial-dark;
+  display:     flex;
+  align-items: center;
+  justify-content: center;
+  overflow:    hidden;
+}
+
+.pattern-divider__grid {
+  display:   flex;
+  flex-wrap: wrap;
+  gap:       8mm;
+  padding:   14mm;
+  width:     100%;
+  opacity:   0.18;
+  box-sizing: border-box;
+}
+
+.pattern-divider__grid .pattern-divider__mark {
+  width: calc(16.66% - 7mm);
+  box-sizing: border-box;
+}
+
+.pattern-divider__mark {
+  display:     flex;
+  align-items: center;
+  justify-content: center;
+  color:       var(--ea-blue);
+  opacity:     0.8;
+}
+
+.pattern-divider__mark svg,
+.pattern-divider__mark img {
+  width:  22mm;
+  height: auto;
+  filter: brightness(0) saturate(100%) invert(40%) sepia(90%) saturate(300%)
+          hue-rotate(190deg) brightness(110%);
+}
+
+.pattern-divider__center-mark {
+  position:  absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width:     60mm;
+  height:    auto;
+  opacity:   0.35;
+}
+
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   ARCHETYPE 3 — MESSAGE PAGE (.page-message-editorial)
+   ───────────────────────────────────────────────────────────────────────────── */
+
+.page-message-editorial {
+  page:        editorial-dark;
+  display:     flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding:     16mm var(--ea-margin-outer) 0 var(--ea-margin-outer);
+}
+
+.message__logo-area {
+  margin-bottom: 10mm;
+}
+
+.message__headline {
+  font-family:    var(--ea-font-condensed);
+  font-size:      54pt;
+  font-weight:    700;
+  line-height:    0.88;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  color:          var(--ea-on-dark-title);
+  margin:         0 0 10mm 0;
+}
+
+.message__headline em {
+  display:    block;
+  color:      var(--ea-blue);
+  font-style: normal;
+}
+
+.message__body-column {
+  width:       52%;
+  margin-left: auto;
+}
+
+.message__lead {
+  font-family: var(--ea-font-sans);
+  font-size:   9pt;
+  font-weight: 600;
+  line-height: 1.55;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color:       var(--ea-on-dark-title);
+  margin-bottom: 5mm;
+}
+
+.message__body {
+  font-family: var(--ea-font-sans);
+  font-size:   9.5pt;
+  font-weight: 400;
+  line-height: 1.68;
+  color:       var(--ea-on-dark);
+}
+
+.message__body p + p {
+  margin-top: 3mm;
+}
+
+.message__partners {
+  position:   absolute;
+  bottom:     0;
+  left:       0; right: 0;
+  padding:    6mm var(--ea-margin-outer);
+  border-top: 1px solid rgba(255,255,255,0.15);
+  display:    flex;
+  align-items: center;
+  gap:        8mm;
+}
+
+.message__partners-label {
+  font-family:  var(--ea-font-sans);
+  font-size:    7.5pt;
+  font-weight:  600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color:        var(--ea-on-dark-muted);
+  white-space:  nowrap;
+  margin-right: 4mm;
+}
+
+.message__partner-logo {
+  height:     6mm;
+  width:      auto;
+  opacity:    0.7;
+  filter:     brightness(0) invert(1);
+}
+
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   ARCHETYPE 4 — VISUAL CONTENTS (.page-visual-toc)
+   ───────────────────────────────────────────────────────────────────────────── */
+
+.page-visual-toc {
+  page:       data-warm;
+  background: var(--ea-warm);
+  padding:    14mm var(--ea-margin-outer) 0 var(--ea-margin-outer);
+  break-before: page;
+  break-after:  page;
+  min-height:   var(--ea-page-h);
+  box-sizing:   border-box;
+  overflow:     hidden;
+}
+
+.toc__heading {
+  font-family:    var(--ea-font-condensed);
+  font-size:      52pt;
+  font-weight:    700;
+  line-height:    0.88;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  color:          var(--ea-ink);
+  margin:         0 0 10mm 0;
+}
+
+.toc__heading em {
+  display:    block;
+  color:      var(--ea-blue);
+  font-style: normal;
+}
+
+.visual-toc-grid {
+  display:   flex;
+  flex-wrap: wrap;
+  gap:       0;
+}
+
+.visual-toc-item {
+  width:        25%;
+  box-sizing:   border-box;
+  padding:      0 4mm 8mm 0;
+  border-bottom: 1px solid var(--ea-border);
+  margin-bottom: 6mm;
+}
+
+.visual-toc-number {
+  font-family:    var(--ea-font-condensed);
+  font-size:      56pt;
+  font-weight:    700;
+  line-height:    0.88;
+  letter-spacing: -0.02em;
+  color:          var(--ea-ink);
+  display:        block;
+  margin-bottom:  2mm;
+}
+
+.visual-toc-item--dim .visual-toc-number {
+  color: var(--ea-muted);
+}
+
+.visual-toc-title {
+  font-family:  var(--ea-font-sans);
+  font-size:    8.5pt;
+  font-weight:  600;
+  line-height:  1.3;
+  color:        var(--ea-ink);
+  display:      block;
+}
+
+.visual-toc-subtitle {
+  font-family: var(--ea-font-sans);
+  font-size:   7.5pt;
+  font-weight: 400;
+  color:       var(--ea-muted);
+  display:     block;
+  margin-top:  1mm;
+}
+
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   ARCHETYPE 5 — MARKET SNAPSHOT (.page-market-snapshot)
+   ───────────────────────────────────────────────────────────────────────────── */
+
+.page-market-snapshot {
+  page:        editorial-dark;
+  display:     flex;
+  flex-direction: row;
+  padding:     16mm var(--ea-margin-outer) 16mm var(--ea-margin-outer);
+  gap:         14mm;
+}
+
+.snapshot__context {
+  width:       42%;
+  flex-shrink: 0;
+  display:     flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.snapshot__label {
+  font-family:  var(--ea-font-sans);
+  font-size:    7.5pt;
+  font-weight:  600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color:        var(--ea-blue);
+  margin-bottom: 5mm;
+  display:      block;
+}
+
+.snapshot__title {
+  font-family:    var(--ea-font-condensed);
+  font-size:      40pt;
+  font-weight:    700;
+  line-height:    0.9;
+  text-transform: uppercase;
+  color:          var(--ea-on-dark-title);
+  margin:         0 0 7mm 0;
+}
+
+.snapshot__description {
+  font-family:  var(--ea-font-sans);
+  font-size:    9pt;
+  font-weight:  400;
+  line-height:  1.68;
+  color:        var(--ea-on-dark);
+}
+
+.snapshot__stats {
+  flex:      1;
+  display:   flex;
+  flex-wrap: wrap;
+  gap:       0 6mm;
+  align-content: space-evenly;
+}
+
+.stat-hero {
+  width:          100%;
+  flex-shrink:    0;
+  padding-bottom: 6mm;
+  border-bottom:  1px solid rgba(255,255,255,0.12);
+}
+
+.stat-primary,
+.stat-secondary {
+  width:      calc(50% - 3mm);
+  box-sizing: border-box;
+}
+
+.stat-hero__value {
+  font-family:    var(--ea-font-condensed);
+  font-size:      80pt;
+  font-weight:    700;
+  line-height:    0.88;
+  letter-spacing: -0.02em;
+  color:          var(--ea-sky);
+  display:        block;
+}
+
+.stat-primary {
+  padding-bottom: 4mm;
+}
+
+.stat-primary__value {
+  font-family:    var(--ea-font-condensed);
+  font-size:      52pt;
+  font-weight:    700;
+  line-height:    0.9;
+  letter-spacing: -0.015em;
+  color:          var(--ea-sky);
+  display:        block;
+}
+
+.stat-secondary__value {
+  font-family:    var(--ea-font-condensed);
+  font-size:      34pt;
+  font-weight:    700;
+  line-height:    0.9;
+  letter-spacing: -0.01em;
+  color:          var(--ea-blue);
+  display:        block;
+}
+
+.stat-label {
+  display:      block;
+  font-family:  var(--ea-font-sans);
+  font-size:    7.5pt;
+  font-weight:  600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color:        var(--ea-on-dark-muted);
+  margin-top:   2mm;
+  padding-top:  2mm;
+  border-top:   1px solid rgba(255,255,255,0.15);
+}
+
+.stat-sublabel {
+  display:     block;
+  font-family: var(--ea-font-sans);
+  font-size:   7pt;
+  font-weight: 400;
+  color:       var(--ea-on-dark-muted);
+  margin-top:  1mm;
+}
+
+/* Cluster for light data pages */
+.stat-cluster {
+  display:    flex;
+  flex-wrap:  wrap;
+  gap:        4mm 8mm;
+  margin:     5mm 0;
+}
+
+.stat-cluster__item {
+  min-width: 24mm;
+}
+
+.stat-cluster__value {
+  font-family:    var(--ea-font-condensed);
+  font-size:      28pt;
+  font-weight:    700;
+  line-height:    1.0;
+  color:          var(--ea-blue);
+  display:        block;
+}
+
+.stat-cluster__label {
+  font-family:  var(--ea-font-sans);
+  font-size:    7.5pt;
+  font-weight:  600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color:        var(--ea-muted);
+  display:      block;
+  margin-top:   1.5mm;
+}
+
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   ARCHETYPE 6 — SECTION OPENER (.page-section-opener)
+   ───────────────────────────────────────────────────────────────────────────── */
+
+.page-section-opener {
+  page:        editorial-dark;
+  display:     flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding:     20mm var(--ea-margin-outer) 18mm var(--ea-margin-outer);
+}
+
+.section-opener__kicker {
+  font-family:  var(--ea-font-sans);
+  font-size:    9pt;
+  font-weight:  600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color:        var(--ea-blue);
+  margin-bottom: 4mm;
+  display:      block;
+}
+
+.section-opener__title {
+  font-family:    var(--ea-font-condensed);
+  font-size:      76pt;
+  font-weight:    700;
+  line-height:    0.86;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  color:          var(--ea-on-dark-title);
+  margin:         0 0 8mm 0;
+}
+
+.section-opener__thesis {
+  font-family:  var(--ea-font-sans);
+  font-size:    11pt;
+  font-weight:  400;
+  line-height:  1.55;
+  color:        var(--ea-on-dark);
+  max-width:    120mm;
+}
+
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   ARCHETYPE 7 — CHART HERO (.page-chart-hero)
+   ───────────────────────────────────────────────────────────────────────────── */
+
+.page-chart-hero {
+  background: var(--ea-warm);
+  padding:    12mm var(--ea-margin-outer) 18mm var(--ea-margin-outer);
+  break-before: page;
+  break-after:  page;
+  min-height:   var(--ea-page-h);
+  height:       var(--ea-page-h);
+  box-sizing:   border-box;
+  display:      block;
+  position:     relative;
+  overflow:     hidden;
+}
+
+.chart-hero__kicker {
+  font-family:  var(--ea-font-sans);
+  font-size:    7.5pt;
+  font-weight:  600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color:        var(--ea-blue);
+  margin-bottom: 2mm;
+  display:      block;
+}
+
+.chart-hero__title {
+  font-family:    var(--ea-font-condensed);
+  font-size:      28pt;
+  font-weight:    700;
+  line-height:    0.96;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  color:          var(--ea-ink);
+  margin:         0 0 3mm 0;
+}
+
+.chart-hero__interpretive {
+  font-family: var(--ea-font-sans);
+  font-size:   10pt;
+  font-weight: 400;
+  line-height: 1.55;
+  color:       var(--ea-body);
+  max-width:   150mm;
+  margin-bottom: 6mm;
+}
+
+.chart-hero__interpretive strong {
+  color:       var(--ea-ink);
+  font-weight: 600;
+}
+
+.chart-hero__chart {
+  width:   100%;
+  margin:  0;
+}
+
+.chart-hero__chart img {
+  width:      100%;
+  max-height: 175mm;
+  object-fit: contain;
+  display:    block;
+}
+
+/* Source note pinned to bottom of the page */
+.chart-hero__source {
+  position:    absolute;
+  bottom:      8mm;
+  left:        var(--ea-margin-outer);
+  right:       var(--ea-margin-outer);
+  font-family: var(--ea-font-sans);
+  font-size:   7.5pt;
+  font-style:  italic;
+  color:       var(--ea-muted);
+}
+
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   ARCHETYPE 8 — INSIGHT SPREAD (.page-insight-spread)
+   ───────────────────────────────────────────────────────────────────────────── */
+
+.page-insight-spread {
+  background:   var(--ea-warm);
+  padding:      14mm var(--ea-margin-outer) 12mm var(--ea-margin-outer);
+  break-before: page;
+  break-after:  page;
+  min-height:   var(--ea-page-h);
+  box-sizing:   border-box;
+}
+
+.insight-spread__header {
+  margin-bottom: 7mm;
+  border-bottom: 1px solid var(--ea-border);
+  padding-bottom: 5mm;
+}
+
+.insight-spread__kicker {
+  font-family:  var(--ea-font-sans);
+  font-size:    7.5pt;
+  font-weight:  600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color:        var(--ea-blue);
+  margin-bottom: 2mm;
+  display:      block;
+}
+
+.insight-spread__title {
+  font-family:    var(--ea-font-serif);
+  font-size:      22pt;
+  font-weight:    600;
+  line-height:    1.05;
+  letter-spacing: -0.015em;
+  color:          var(--ea-ink);
+  margin:         0;
+}
+
+.insight-spread__columns {
+  display:   flex;
+  gap:       8mm;
+  margin-top: 5mm;
+}
+
+.insight-spread__col {
+  flex: 1;
+}
+
+.insight-spread__body {
+  font-family: var(--ea-font-sans);
+  font-size:   9.5pt;
+  font-weight: 400;
+  line-height: 1.71;
+  color:       var(--ea-body);
+}
+
+.insight-spread__body p + p {
+  margin-top: 3mm;
+}
+
+/* Individual finding block */
+.insight-block {
+  padding:      3.5mm 0 3.5mm 4mm;
+  border-left:  3px solid var(--ea-blue);
+  margin-bottom: 5mm;
+}
+
+.insight-block__lead {
+  font-family: var(--ea-font-sans);
+  font-size:   9.5pt;
+  font-weight: 600;
+  line-height: 1.4;
+  color:       var(--ea-ink);
+  display:     block;
+  margin-bottom: 1.5mm;
+}
+
+.insight-block__body {
+  font-family: var(--ea-font-sans);
+  font-size:   9pt;
+  font-weight: 400;
+  line-height: 1.65;
+  color:       var(--ea-body);
+}
+
+/* Inline stat callout */
+.insight-number {
+  display:     inline-block;
+  font-family: var(--ea-font-condensed);
+  font-size:   28pt;
+  font-weight: 700;
+  line-height: 1.0;
+  color:       var(--ea-blue);
+  vertical-align: middle;
+  margin-right: 2mm;
+}
+
+/* Thesis statement */
+.section-thesis {
+  font-family: var(--ea-font-sans);
+  font-size:   11pt;
+  font-weight: 500;
+  line-height: 1.5;
+  color:       var(--ea-ink);
+  border-left: 4px solid var(--ea-blue);
+  padding:     3mm 0 3mm 5mm;
+  margin:      5mm 0;
+}
+
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   ARCHETYPE 9 — TRENDS PAGE (.page-trends)
+   ───────────────────────────────────────────────────────────────────────────── */
+
+.page-trends {
+  background:   var(--ea-warm);
+  padding:      14mm var(--ea-margin-outer) 12mm var(--ea-margin-outer);
+  break-before: page;
+  break-after:  page;
+  min-height:   var(--ea-page-h);
+  box-sizing:   border-box;
+}
+
+.trends__header {
+  display:       flex;
+  align-items:   flex-end;
+  gap:           8mm;
+  margin-bottom: 7mm;
+  padding-bottom: 5mm;
+  border-bottom: 1px solid var(--ea-border);
+}
+
+.trends__title {
+  font-family:    var(--ea-font-condensed);
+  font-size:      32pt;
+  font-weight:    700;
+  line-height:    0.92;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  color:          var(--ea-ink);
+  margin:         0;
+}
+
+.trends__intro {
+  font-family: var(--ea-font-sans);
+  font-size:   9pt;
+  line-height: 1.6;
+  color:       var(--ea-body);
+  max-width:   100mm;
+}
+
+.trends__grid {
+  display:   flex;
+  flex-wrap: wrap;
+  gap:       5mm 7mm;
+}
+
+.trend-item {
+  width:      calc(50% - 3.5mm);
+  box-sizing: border-box;
+}
+
+.trend-item {
+  padding:     4mm;
+  background:  var(--ea-white);
+  border-top:  3px solid var(--ea-blue);
+}
+
+.trend-item__label {
+  font-family:  var(--ea-font-sans);
+  font-size:    7.5pt;
+  font-weight:  600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color:        var(--ea-blue);
+  margin-bottom: 2mm;
+  display:      block;
+}
+
+.trend-item__title {
+  font-family: var(--ea-font-serif);
+  font-size:   13pt;
+  font-weight: 600;
+  line-height: 1.2;
+  color:       var(--ea-ink);
+  margin:      0 0 2mm 0;
+}
+
+.trend-item__body {
+  font-family: var(--ea-font-sans);
+  font-size:   8.5pt;
+  font-weight: 400;
+  line-height: 1.62;
+  color:       var(--ea-body);
+}
+
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   ARCHETYPE 10 — REGION OVERVIEW (.page-region-overview)
+   ───────────────────────────────────────────────────────────────────────────── */
+
+.page-region-overview {
+  background:   var(--ea-warm);
+  padding:      12mm var(--ea-margin-outer) 10mm var(--ea-margin-outer);
+  break-before: page;
+  break-after:  page;
+  min-height:   var(--ea-page-h);
+  box-sizing:   border-box;
+}
+
+.region__header {
+  display:       flex;
+  align-items:   baseline;
+  gap:           5mm;
+  margin-bottom: 5mm;
+  border-bottom: 1px solid var(--ea-border);
+  padding-bottom: 4mm;
+}
+
+.region__kicker {
+  font-family:  var(--ea-font-sans);
+  font-size:    7.5pt;
+  font-weight:  600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color:        var(--ea-blue);
+}
+
+.region__title {
+  font-family:    var(--ea-font-condensed);
+  font-size:      26pt;
+  font-weight:    700;
+  line-height:    0.92;
+  text-transform: uppercase;
+  color:          var(--ea-ink);
+  margin:         0;
+}
+
+.region__stat-bar {
+  display:    flex;
+  gap:        6mm;
+  flex-wrap:  wrap;
+  margin:     4mm 0 6mm 0;
+  padding:    4mm 0;
+  border-bottom: 1px solid var(--ea-border);
+}
+
+.region__stat {
+  text-align: left;
+}
+
+.region__stat-value {
+  font-family:    var(--ea-font-condensed);
+  font-size:      24pt;
+  font-weight:    700;
+  line-height:    1.0;
+  color:          var(--ea-blue);
+  display:        block;
+}
+
+.region__stat-label {
+  font-family:  var(--ea-font-sans);
+  font-size:    7pt;
+  font-weight:  600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color:        var(--ea-muted);
+  display:      block;
+  margin-top:   1mm;
+}
+
+.region__content {
+  display:  flex;
+  gap:      6mm;
+}
+
+.region__text-column {
+  flex: 1;
+}
+
+.region__chart-column {
+  flex:       0 0 80mm;
+  display:    flex;
+  flex-direction: column;
+  gap:        4mm;
+}
+
+.region__chart-column img {
+  width:      100%;
+  height:     auto;
+}
+
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   ARCHETYPE 11 — METHODOLOGY (.page-methodology)
+   ───────────────────────────────────────────────────────────────────────────── */
+
+.page-methodology {
+  background:   var(--ea-warm);
+  padding:      14mm var(--ea-margin-outer) 12mm var(--ea-margin-outer);
+  break-before: page;
+  break-after:  page;
+  min-height:   var(--ea-page-h);
+  box-sizing:   border-box;
+}
+
+.methodology__header {
+  margin-bottom: 6mm;
+  padding-bottom: 4mm;
+  border-bottom: 1px solid var(--ea-border);
+}
+
+.methodology__kicker {
+  font-family:  var(--ea-font-sans);
+  font-size:    7.5pt;
+  font-weight:  600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color:        var(--ea-muted);
+  display:      block;
+  margin-bottom: 2mm;
+}
+
+.methodology__title {
+  font-family:    var(--ea-font-serif);
+  font-size:      18pt;
+  font-weight:    600;
+  line-height:    1.1;
+  color:          var(--ea-ink);
+  margin:         0;
+}
+
+.methodology__columns {
+  display:  flex;
+  gap:      8mm;
+  margin-top: 4mm;
+}
+
+.methodology__col {
+  flex: 1;
+}
+
+.methodology__col-title {
+  font-family:  var(--ea-font-sans);
+  font-size:    8pt;
+  font-weight:  600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color:        var(--ea-blue);
+  margin-bottom: 2mm;
+  display:      block;
+}
+
+.methodology__body {
+  font-family: var(--ea-font-sans);
+  font-size:   9pt;
+  font-weight: 400;
+  line-height: 1.68;
+  color:       var(--ea-body);
+}
+
+.methodology__body p + p {
+  margin-top: 2.5mm;
+}
+
+.methodology__sources {
+  margin-top: 6mm;
+  padding-top: 4mm;
+  border-top: 1px solid var(--ea-border);
+  display:    flex;
+  flex-wrap:  wrap;
+  gap:        3mm 6mm;
+}
+
+.methodology__source-tag {
+  font-family:  var(--ea-font-sans);
+  font-size:    7.5pt;
+  font-weight:  600;
+  color:        var(--ea-muted);
+  background:   var(--ea-surface);
+  padding:      1mm 3mm;
+  border-radius: 2px;
+}
+
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   ARCHETYPE 12 — HUMAN STORY (.page-human-story)
+   ───────────────────────────────────────────────────────────────────────────── */
+
+.page-human-story {
+  background:   var(--ea-warm);
+  padding:      14mm var(--ea-margin-outer) 12mm var(--ea-margin-outer);
+  break-before: page;
+  break-after:  page;
+  min-height:   var(--ea-page-h);
+  box-sizing:   border-box;
+  display:      flex;
+  flex-direction: column;
+}
+
+.human-story__kicker {
+  font-family:  var(--ea-font-sans);
+  font-size:    7.5pt;
+  font-weight:  600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color:        var(--ea-blue);
+  display:      block;
+  margin-bottom: 3mm;
+}
+
+.human-story__pull-quote {
+  font-family: var(--ea-font-serif);
+  font-size:   20pt;
+  font-weight: 500;
+  font-style:  italic;
+  line-height: 1.35;
+  color:       var(--ea-ink);
+  border-left: 4px solid var(--ea-blue);
+  padding-left: 5mm;
+  margin:      6mm 0;
+  max-width:   140mm;
+}
+
+.human-story__attribution {
+  font-family:  var(--ea-font-sans);
+  font-size:    8pt;
+  font-weight:  600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color:        var(--ea-blue);
+  margin-top:   2mm;
+}
+
+.human-story__body {
+  font-family: var(--ea-font-sans);
+  font-size:   9.5pt;
+  font-weight: 400;
+  line-height: 1.71;
+  color:       var(--ea-body);
+  flex:        1;
+}
+
+.human-story__body p + p {
+  margin-top: 3mm;
+}
+
+.human-story__stats {
+  display:     flex;
+  gap:         6mm;
+  margin-top:  6mm;
+  padding-top: 5mm;
+  border-top:  1px solid var(--ea-border);
+  flex-wrap:   wrap;
+}
+
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   ARCHETYPE 13 — STAT HERO PAGE (.page-stat-hero)
+   ───────────────────────────────────────────────────────────────────────────── */
+
+.page-stat-hero {
+  page:        editorial-dark;
+  display:     flex;
+  flex-direction: column;
+  justify-content: center;
+  padding:     20mm var(--ea-margin-outer);
+}
+
+.stat-hero-page__kicker {
+  font-family:  var(--ea-font-sans);
+  font-size:    8pt;
+  font-weight:  600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color:        var(--ea-blue);
+  display:      block;
+  margin-bottom: 4mm;
+}
+
+.stat-hero-page__value {
+  font-family:    var(--ea-font-condensed);
+  font-size:      96pt;
+  font-weight:    700;
+  line-height:    0.85;
+  letter-spacing: -0.02em;
+  color:          var(--ea-sky);
+  display:        block;
+  margin-bottom:  4mm;
+}
+
+.stat-hero-page__label {
+  font-family:  var(--ea-font-sans);
+  font-size:    10pt;
+  font-weight:  600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color:        var(--ea-on-dark);
+  display:      block;
+  margin-bottom: 3mm;
+}
+
+.stat-hero-page__context {
+  font-family: var(--ea-font-sans);
+  font-size:   10pt;
+  font-weight: 400;
+  line-height: 1.6;
+  color:       var(--ea-on-dark);
+  max-width:   120mm;
+}
+
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   ARCHETYPE 14 — CLOSING PAGE (.page-closing)
+   ───────────────────────────────────────────────────────────────────────────── */
+
+.page-closing {
+  page:        editorial-dark;
+  display:     flex;
+  flex-direction: column;
+  justify-content: center;
+  padding:     20mm var(--ea-margin-outer);
+}
+
+.closing__title {
+  font-family:    var(--ea-font-condensed);
+  font-size:      52pt;
+  font-weight:    700;
+  line-height:    0.88;
+  text-transform: uppercase;
+  color:          var(--ea-on-dark-title);
+  margin:         0 0 8mm 0;
+}
+
+.closing__body {
+  font-family: var(--ea-font-sans);
+  font-size:   9.5pt;
+  font-weight: 400;
+  line-height: 1.68;
+  color:       var(--ea-on-dark);
+  max-width:   120mm;
+}
+
+.closing__contact-block {
+  margin-top:   8mm;
+  padding-top:  6mm;
+  border-top:   1px solid rgba(255,255,255,0.15);
+}
+
+.closing__contact-item {
+  font-family: var(--ea-font-sans);
+  font-size:   9pt;
+  font-weight: 400;
+  color:       var(--ea-on-dark);
+  line-height: 1.8;
+}
+
+.closing__contact-item strong {
+  color:       var(--ea-sky);
+  font-weight: 600;
+}
+
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   PULL QUOTE — editorial component (works on both light and dark pages)
+   ───────────────────────────────────────────────────────────────────────────── */
+
+.pull-quote-editorial {
+  border-left:  4px solid var(--ea-blue);
+  padding:      3mm 0 3mm 5mm;
+  margin:       5mm 0;
+}
+
+.pull-quote-editorial__text {
+  font-family: var(--ea-font-serif);
+  font-size:   15pt;
+  font-weight: 500;
+  font-style:  italic;
+  line-height: 1.42;
+  color:       var(--ea-ink);
+}
+
+.ea-dark .pull-quote-editorial__text {
+  color: var(--ea-on-dark);
+}
+
+.pull-quote-editorial__attribution {
+  display:      block;
+  font-family:  var(--ea-font-sans);
+  font-size:    7.5pt;
+  font-weight:  600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color:        var(--ea-blue);
+  margin-top:   2mm;
+}
+
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   SOURCE NOTE — used across all chart/data pages
+   ───────────────────────────────────────────────────────────────────────────── */
+
+.source-note {
+  font-family: var(--ea-font-sans);
+  font-size:   7.5pt;
+  font-style:  italic;
+  font-weight: 400;
+  color:       var(--ea-muted);
+  margin-top:  2mm;
+  display:     block;
+}
+
+.ea-dark .source-note {
+  color: var(--ea-on-dark-muted);
+}
+
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   EDITORIAL DIVIDER — horizontal rule with optional label
+   ───────────────────────────────────────────────────────────────────────────── */
+
+.editorial-divider {
+  display:       flex;
+  align-items:   center;
+  gap:           3mm;
+  margin:        5mm 0;
+}
+
+.editorial-divider::before {
+  content:     '';
+  flex:        1;
+  height:      1px;
+  background:  var(--ea-border);
+}
+
+.editorial-divider::after {
+  content:     '';
+  flex:        1;
+  height:      1px;
+  background:  var(--ea-border);
+}
+
+.editorial-divider span {
+  font-family:  var(--ea-font-sans);
+  font-size:    7pt;
+  font-weight:  600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color:        var(--ea-muted);
+  white-space:  nowrap;
+}
+
+.ea-dark .editorial-divider::before,
+.ea-dark .editorial-divider::after {
+  background: rgba(255,255,255,0.15);
+}
+
+.ea-dark .editorial-divider span {
+  color: var(--ea-on-dark-muted);
+}
+
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   UTILITY — kicker (eyebrow label used across multiple archetypes)
+   ───────────────────────────────────────────────────────────────────────────── */
+
+.kicker {
+  font-family:  var(--ea-font-sans);
+  font-size:    7.5pt;
+  font-weight:  600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color:        var(--ea-blue);
+  display:      block;
+  margin-bottom: 2.5mm;
+}
+
+.ea-dark .kicker {
+  color: var(--ea-sky);
+}
