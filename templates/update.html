@@ -71,7 +71,33 @@
 </section>
 
 <!-- ══════════════════════════════════════════════════════════════
-     PAGE 5 — CLOSING (context, what changed since last quarterly, contact)
+     PAGE 5 — CHART HERO #3 (design category mix)
+     ══════════════════════════════════════════════════════════════ -->
+<section class="ea-page page-chart-hero">
+  <span class="chart-hero__kicker">{{ chart3_kicker }}</span>
+  <h3 class="chart-hero__title">{{ chart3_title }}</h3>
+  <p class="chart-hero__interpretive">{{ chart3_interpretive | safe }}</p>
+  <div class="chart-hero__chart">
+    <img src="{{ chart3_uri }}" alt="{{ chart3_title }}">
+  </div>
+  <p class="chart-hero__source">{{ chart3_source }}</p>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     PAGE 6 — CHART HERO #4 (funding & provider base)
+     ══════════════════════════════════════════════════════════════ -->
+<section class="ea-page page-chart-hero">
+  <span class="chart-hero__kicker">{{ chart4_kicker }}</span>
+  <h3 class="chart-hero__title">{{ chart4_title }}</h3>
+  <p class="chart-hero__interpretive">{{ chart4_interpretive | safe }}</p>
+  <div class="chart-hero__chart">
+    <img src="{{ chart4_uri }}" alt="{{ chart4_title }}">
+  </div>
+  <p class="chart-hero__source">{{ chart4_source }}</p>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     PAGE 7 — CLOSING (context, what changed since last quarterly, contact)
      ══════════════════════════════════════════════════════════════ -->
 <section class="ea-page ea-dark page-closing">
   <h2 class="closing__title">{{ closing_title }}</h2>

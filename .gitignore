@@ -5,3 +5,8 @@ outputs/*/update_debug.html
 outputs/*/*.pdf
 .venv/
 *.log
+
+# Raw / context source material — versioned locally only, re-download from
+# the NDIA if needed. Only processed CSVs (data/*/processed/) are tracked.
+data/*/raw/
+data/context/

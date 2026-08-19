@@ -46,17 +46,8 @@ def _b64_uri(path: Path, mime: str) -> str:
 
 
 def load_context(quarter: str) -> dict:
-    """
-    Build the Jinja2 context for one quarter.
-
-    TODO once the new NDIS Supplement P file is in data/<quarter>/raw/:
-      - run scripts/extract_quarterly.py to populate data/<quarter>/processed/
-      - run scripts/build_charts.py to populate outputs/<quarter>/chart_*.png
-      - replace the placeholder values below with real figures
-    """
-    processed = DATA / quarter / "processed"
-    charts    = OUTPUTS / quarter
-
+    """Build the Jinja2 context for one quarter from data/<quarter>/processed/ + outputs/<quarter>/."""
+    charts = OUTPUTS / quarter
     logo_path = ASSETS_DIR / "sdahc-logo.png"
 
     ctx = {
@@ -67,42 +58,104 @@ def load_context(quarter: str) -> dict:
 
         # ── Page 1: Cover ──────────────────────────────────────────
         "cover_title":     "MARKET<br>UPDATE",
-        "quarter_label":   quarter,
+        "quarter_label":   "Q4 2025–26",
         "cover_tagline":   "A quarterly complement to the SDA Market Report 2026, "
                             "tracking the latest NDIS release against the report's baseline.",
 
         # ── Page 2: Snapshot ───────────────────────────────────────
-        "snapshot_title":       "PLACEHOLDER — RUN EXTRACTOR",
-        "snapshot_description": "Replace with 2–3 sentences of context once the new "
-                                 "Supplement P release has been processed.",
+        "snapshot_title":       "Supply keeps expanding, led by new-build delivery",
+        "snapshot_description": "Enrolled SDA dwellings reached 14,235 nationally in Q4 2025–26, "
+                                 "up 22% on Q4 2024–25 and up 80% on Q4 2022–23. New-build stock "
+                                 "now accounts for 73% of the total, against 48% four years ago — "
+                                 "legacy and existing-stock enrolments have stayed essentially flat "
+                                 "across the period. 9,014 participants remain SDA-eligible but not "
+                                 "yet housed, pointing to continued undersupply despite the delivery pace.",
         "headline_kpis": [
-            {"value": "—", "label": "Participants with SDA in use", "sublabel": "national, QoQ"},
-            {"value": "—", "label": "Enrolled dwellings",            "sublabel": "national, QoQ"},
-            {"value": "—", "label": "New builds this quarter"},
-            {"value": "—", "label": "Funding committed"},
+            {"value": "14,235", "label": "Enrolled SDA dwellings", "sublabel": "+22% vs Q4 2024–25 (11,642)"},
+            {"value": "73%",    "label": "New-build share of stock", "sublabel": "up from 48% in Q4 2022–23"},
+            {"value": "16,644", "label": "Participants with SDA in use", "sublabel": "+9.7% vs Q4 2024–25"},
+            {"value": "9,014",  "label": "Eligible, not yet using SDA", "sublabel": "unmet demand, national"},
+            {"value": "$683.8m","label": "Committed SDA funding", "sublabel": "+22% vs Q4 2024–25 ($559.8m)"},
+            {"value": "585",    "label": "Active SDA providers", "sublabel": "+14% vs Q4 2024–25 (514)"},
         ],
 
         # ── Page 3: Chart hero 1 ───────────────────────────────────
-        "chart1_kicker":       "NATIONAL TREND",
-        "chart1_title":        "PLACEHOLDER TITLE",
-        "chart1_interpretive": "Interpretive paragraph — what changed this quarter and why it matters.",
-        "chart1_uri":          _b64_uri(charts / "chart_1.png", "image/png") if (charts / "chart_1.png").exists() else "",
-        "chart1_source":       f"Source: NDIA, Quarterly SDA Data (Supplement P), {quarter}.",
+        "chart1_kicker":       "FOUR-YEAR TREND",
+        "chart1_title":        "New-build supply has nearly tripled since Q4 2022–23, "
+                                "while legacy stock stays flat",
+        "chart1_interpretive": "National SDA enrolments grew from 7,925 dwellings in Q4 2022–23 to "
+                                "14,235 in Q4 2025–26. Almost all of that growth came from new-build "
+                                "(including refurbished) stock, which rose from 3,818 to 10,414 dwellings "
+                                "over the same four Q4 snapshots. Existing and legacy stock, by contrast, "
+                                "has drifted slightly lower — from 4,107 to 3,821 — as older dwellings exit "
+                                "the register faster than they're replenished. The result is a steady shift "
+                                "in the composition of the register: new-build now represents 73% of all "
+                                "enrolled SDA dwellings, up from 48% at the start of the series.",
+        "chart1_uri":          _b64_uri(charts / "chart_1_dwelling_growth.png", "image/png")
+                                if (charts / "chart_1_dwelling_growth.png").exists() else "",
+        "chart1_source":       "Source: NDIA, Supplement P — Specialist Disability Accommodation, Table P.4, Q4 releases 2022–23 to 2025–26.",
 
         # ── Page 4: Chart hero 2 ───────────────────────────────────
-        "chart2_kicker":       "REGIONAL / SEGMENT CUT",
-        "chart2_title":        "PLACEHOLDER TITLE",
-        "chart2_interpretive": "Interpretive paragraph — secondary cut of the data (state, design category, etc.).",
-        "chart2_uri":          _b64_uri(charts / "chart_2.png", "image/png") if (charts / "chart_2.png").exists() else "",
-        "chart2_source":       f"Source: NDIA, Quarterly SDA Data (Supplement P), {quarter}.",
+        "chart2_kicker":       "STATE DISTRIBUTION",
+        "chart2_title":        "Victoria and NSW together hold over half the national stock",
+        "chart2_interpretive": "Victoria leads all jurisdictions with 4,190 enrolled dwellings (29% of "
+                                "the national total), followed by NSW at 3,395 (24%) and Queensland at "
+                                "2,978 (21%). Together the three largest states account for nearly three "
+                                "quarters of national supply. At the other end, the ACT, Tasmania and the "
+                                "Northern Territory remain small markets — 213, 183 and 149 dwellings "
+                                "respectively — though all three have grown faster in percentage terms than "
+                                "the larger states over the past year, off a much smaller base.",
+        "chart2_uri":          _b64_uri(charts / "chart_2_state_distribution.png", "image/png")
+                                if (charts / "chart_2_state_distribution.png").exists() else "",
+        "chart2_source":       "Source: NDIA, Supplement P — Specialist Disability Accommodation, Table P.4, Q4 2025–26.",
 
-        # ── Page 5: Closing ────────────────────────────────────────
+        # ── Page 5: Chart hero 3 ───────────────────────────────────
+        "chart3_kicker":       "DESIGN CATEGORY MIX",
+        "chart3_title":        "High Physical Support now dominates the register, while Basic stock keeps shrinking",
+        "chart3_interpretive": "High Physical Support is by far the largest design category nationally, with "
+                                "7,173 enrolled dwellings — more than half of all new-build delivery since "
+                                "Q4 2022–23 has landed in this category, growing from 2,664 to 7,173 dwellings "
+                                "over four years. Improved Liveability (2,066) and Fully Accessible (1,231) "
+                                "follow at a distance. Basic is the only category moving in the opposite "
+                                "direction: it has declined every year on record, from 2,072 dwellings in "
+                                "Q4 2022–23 to 1,862 in Q4 2025–26, even as total stock grew 80% over the same "
+                                "period. Multi-Design Category remains a rounding error nationally at 65 dwellings.",
+        "chart3_uri":          _b64_uri(charts / "chart_3_design_mix.png", "image/png")
+                                if (charts / "chart_3_design_mix.png").exists() else "",
+        "chart3_source":       "Source: NDIA, Supplement P — Specialist Disability Accommodation, Table P.5, Q4 2025–26.",
+
+        # ── Page 6: Chart hero 4 ───────────────────────────────────
+        "chart4_kicker":       "FUNDING & PROVIDER BASE",
+        "chart4_title":        "Committed funding and the active provider base are both growing, but funding is outpacing provider entry",
+        "chart4_interpretive": "Annualised SDA funding committed in current plans has grown from $364.9m in "
+                                "Q4 2022–23 to $683.8m in Q4 2025–26 — an 87% increase in four years, and up "
+                                "22% on Q4 2024–25 alone ($559.8m). The number of active SDA providers has "
+                                "grown more slowly, from 472 to 585 over the same period (+24%), though it did "
+                                "dip slightly between Q4 2023–24 (594) and Q4 2024–25 (514) before recovering. "
+                                "The gap between funding growth and provider growth is consistent with the "
+                                "flight-to-quality pattern visible in the design-mix data: capital is "
+                                "concentrating in higher-value, higher-support dwellings delivered by a "
+                                "provider base that isn't expanding at the same pace.",
+        "chart4_uri":          _b64_uri(charts / "chart_4_funding_providers.png", "image/png")
+                                if (charts / "chart_4_funding_providers.png").exists() else "",
+        "chart4_source":       "Source: NDIA, Supplement P — Specialist Disability Accommodation, Tables P.2 and P.3, Q4 releases 2022–23 to 2025–26.",
+
+        # ── Page 7: Closing ────────────────────────────────────────
         "closing_title":        "WHAT THIS MEANS",
-        "closing_body":         "Closing commentary tying this quarter's release back to the "
-                                 "SDA Market Report 2026 baseline and forward outlook.",
-        "closing_quote":        "“Optional pull quote or key takeaway.”",
-        "closing_source_note":  "Figures are drawn from the NDIA's published quarterly SDA data. "
-                                 "See the SDA Market Report 2026 for full methodology.",
+        "closing_body":         "This release confirms the trajectory set out in the SDA Market Report "
+                                 "2026: new-build delivery is now the primary driver of register growth, "
+                                 "not stock turnover. But the 9,014 participants who are SDA-eligible and "
+                                 "not yet housed — a cohort the NDIA only began reporting separately from "
+                                 "Q4 2024–25 — show that delivery has not caught up with demand. Note that "
+                                 "participant figures from Q4 2022–23 and Q4 2023–24 use a single combined "
+                                 "metric ('active participants with SDA supports') and are not directly "
+                                 "comparable to the split in-use / eligible-not-using figures reported from "
+                                 "Q4 2024–25 onward.",
+        "closing_quote":        "“New-build stock has gone from under half to nearly three quarters "
+                                 "of the national SDA register in four years.”",
+        "closing_source_note":  "Figures are drawn from the NDIA's published quarterly SDA data "
+                                 "(Supplement P, Tables P.1 and P.4). See the SDA Market Report 2026 "
+                                 "for full methodology.",
         "contact_name":         "SDA Home Choices",
         "contact_email":        "hello@sdahomechoices.com.au",
         "contact_note":         "For the full 76-page SDA Market Report 2026, see sdahomechoices.com.au",
