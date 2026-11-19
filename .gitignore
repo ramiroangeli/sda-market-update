@@ -10,3 +10,36 @@ outputs/*/*.pdf
 # the NDIA if needed. Only processed CSVs (data/*/processed/) are tracked.
 data/*/raw/
 data/context/
+
+# ---- SDAHC backup rules (added 2026-11-20) ----
+# secrets and credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+credentials*
+secrets*
+.claude/settings.local.json
+# dependencies and caches
+node_modules/
+.venv/
+venv/
+__pycache__/
+*.pyc
+.DS_Store
+# generated deliverables and outputs
+*.pdf
+*.mp4
+*.mov
+*.mp3
+*.wav
+out/
+dist/
+renders/
+snapshots/
+# private data: derived from unpublished research, never NDIS participant data
+fixtures-private/
+**/participants/
+*participant*
+*ndis*plan*
